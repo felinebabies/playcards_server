@@ -1,0 +1,395 @@
+@charset "Shift_JIS";
+/* *********************************************** */
+/*
+ * CSS着せ替えテンプレート用デザイン（2009.12.29）
+ *  Author: 坂取
+ *  Author URI: http://az-store.nrym.org/
+ */
+/* *********************************************** */
+
+	/* HTML要素（一部#ID） */
+*
+	{
+	}
+
+	/* 基本構造 */
+html
+	{
+	margin: 0;
+	padding: 0;
+	}
+body
+	{
+	margin: 0;
+	padding: 5em 0 2em;
+	background: #7d8c8f;
+	color: #545454;
+	font-size: 80%;
+	line-height: 1.6;
+	}
+hr
+	{
+	display: none;
+	}
+img
+	{
+	margin: 1px;
+	padding: 0;
+	}
+a img
+	{
+	border: none;
+	}
+div
+	{
+	margin: 0;
+	padding: 0;
+	}
+address,blockquote,p,pre,dl,fieldset,table,object,embed
+	{
+	margin: 1.5em 0;
+	}
+	/* 見出し */
+h1,h2,h3,h4,h5,h6
+	{
+	color: #5394a8;
+	font-size: 125%;
+	margin: 1.5em 0 0.5em;
+	padding: 0;
+	}
+h1
+	{
+	font-weight: 700;
+	font-size: 150%;
+	margin: 0;
+	padding: 15px 0 0;
+	}
+h2
+	{
+	border-bottom: 1px solid #5394a8;
+	}
+h3
+	{
+	border-left: 9px double #5394a8;
+	padding-left: 5px;
+	}
+h4
+	{
+	border-left: 5px solid #5394a8;
+	padding-left: 5px;
+	}
+h5
+	{
+	}
+h6
+	{
+	}
+
+	/* 段落 */
+p
+	{
+	}
+
+	/* アンカー */
+a
+	{
+	text-decoration: underline;
+	}
+	a:link
+		{
+		color: #2b51db;
+		}
+	a:visited
+		{
+		color: #a75aa6;
+		}
+	a:hover
+		{
+		color: #f37497;
+		}
+
+	/* 強調・追加・削除 */
+em
+	{
+	font-style: normal;
+	font-weight: 700;
+	}
+strong
+	{
+	font-weight: 700;
+	background: #eeeeee;
+	padding: 1px 2px;
+	}
+ins
+	{
+	}
+del
+	{
+	}
+
+	/* フォーム */
+
+input
+	{
+	border: 1px solid #5394a8;
+	margin-bottom: 1px;
+	padding: 0.1em;
+	}
+		#TEXT
+			{
+			}
+		#CHECKBOX
+			{
+			}
+		#RADIO
+			{
+			}
+		#BUTTON
+			{
+			background: #5394a8;
+			}
+textarea
+	{
+	border: 1px solid #5394a8;
+	margin-bottom: 1px;
+	padding: 0.1em;
+	}
+select
+	{
+	}
+option
+	{
+	}
+optgroup
+	{
+	}
+
+	/* リスト */
+ol
+	{
+	}
+		ol li
+			{
+			}
+ul
+	{
+	}
+		ul li
+			{
+			}
+dl
+	{
+	}
+		dt
+			{
+			font-weight: 700;
+			}
+		dd
+			{
+			margin-left: 1em;
+			}
+
+	/* アドレス */
+address
+	{
+	font-style: normal;
+	}
+
+	/* 引用（サンプルページ未記述） */
+blockquote
+	{
+	border: 1px solid #5394a8;
+	border-left: 5px solid #5394a8;
+	padding: 0.25em 1em;
+	margin: auto 0;
+	}
+cite,q
+	{
+	border: 1px solid #5394a8;
+	padding: 2px 3px;
+	}
+
+	/* 整形済みテキスト（サンプルページ未記述） */
+pre
+	{
+	padding: 0.5em;
+	background: #eeeeee;
+	width: auto;
+	overflow: scroll;
+	}
+* html pre
+	{
+	width: 95%;
+	}
+	/* 物理要素（サンプルページ未記述） */
+b
+	{
+	}
+i
+	{
+	}
+big
+	{
+	}
+small
+	{
+	}
+tt
+	{
+	}
+
+	/* ***********************************************
+	/* 各#ID＆.class */
+#INDEX #PAN
+	{
+	background: url("./image/index.jpg") no-repeat 50% 100%;
+	padding-bottom: 235px;
+	}
+
+#PAGETOP
+	{
+	margin: 0 auto;
+	padding: 0;
+	max-width: 700px;
+	background: #ffffff url("./image/pagetop.gif") no-repeat 100% 100%;
+	}
+/* IE6はmax-widthが効かないので別に指定する */
+* html #PAGETOP
+	{
+	width: 700px;
+	}
+#HEADER
+	{
+	margin: 0;
+	padding: 20px 15px 0;
+	background: url("./image/header.gif") no-repeat 0% 0%;
+	}
+		#PAN
+			{
+			padding: 0;
+			margin: 0;
+			text-align: right;
+			list-style: none;
+			background: url("./image/photo.jpg") no-repeat 50% 100%;
+			padding-bottom: 106px;
+			}
+		#PAN li
+			{
+			display: inline;
+			}
+		#PAN a
+			{
+			padding: 0 0.7em 0 0;
+			background: url("./image/pan.gif") no-repeat 100% 50%;
+			}
+#MENU
+	{
+	margin: 6px 15px 0;
+	padding: 2px 0;
+	background: #ffffff;
+	border-top: 6px double #575656;
+	border-bottom: 6px double #575656;
+	}
+#MENU h2
+	{
+	display: none;
+	}
+#MENU ul
+	{
+	list-style-type: none;
+	background: #575656;
+	padding: 2px 0.5em;
+	margin: 0;
+	}
+		#MENU li
+			{
+			display: inline;
+			}
+		#MENU li a
+			{
+			display: inline;
+			text-decoration: none;
+			padding: 0 0.5em;
+			font: bold 100% Helvetica,Arial,sans-serif;
+			letter-spacing: 1pt;
+			}
+		#MENU li a:link,
+		#MENU li a:visited
+			{
+			color: #ffffff;
+			}
+		#MENU li a:hover
+			{
+			color: #999999;
+			}
+		#MENU li.menu-on a
+			{
+			color: #999999;
+			}
+#KIZI
+	{
+	margin: 0;
+	padding: 0 15px;
+	background: #ffffff;
+	}
+		.text
+			{
+			margin: 0 0.5em 3em;
+			}
+		.modori
+			{
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			}
+		.modori li
+			{
+			list-style: none;
+			display: block;
+			text-align: right;
+			margin: 1em 0 0 0;
+			}
+		.modori li a
+			{
+			display: inline;
+			font-weight: 700;
+			font-size: 110%;
+			color: #545454;
+		letter-spacing: 0.25em;
+			}
+
+#FOOTER
+	{
+	margin: 0;
+	padding: 0.5em 15px 1em;
+	text-align: right;
+
+	}
+		#FOOTER h2
+			{
+			display: none;
+			}
+		#FOOTER a:link,
+		#FOOTER a:visited
+			{
+			color: #545454;
+			}
+
+		#FOOTER ul
+			{
+			list-style: none;
+			}
+		#FOOTER li
+			{
+			display: inline;
+			margin: 0 0.5em;
+			}
+		#FOOTER li a
+			{
+			display: inline;
+			}
+		#FOOTER li address
+			{
+			display: inline;
+			font-style: normal;
+			}

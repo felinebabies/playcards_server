@@ -1,10 +1,31 @@
 !!!
+- #テンプレート配布元
+- #http://az-store.nrym.org/
 %html
   %head
+    %script{src: "/js/jquery-3.1.1.min.js"}
+    %link{rel: "stylesheet", href: "css/style.css", type: "text/css"}
     %title トランプの山札からカードを引くやつ
-    %body
-      %h1 トランプの山札からカードを引くやつ
-      %p
-        あなたが引いたカードはこれ！
-      %p
-        #{@card[:type]}の#{@card[:num]}
+    %body#INDEX
+      #PAGETOP
+        #HEADER
+          %h1 トランプの山札からカードを引くやつ
+          - # トップ画像配布元
+          - # https://pixabay.com/ja/%E3%83%88%E3%83%A9%E3%83%B3%E3%83%97-%E7%81%AB%E3%81%8B%E3%81%8D%E6%A3%92-%E3%83%96%E3%83%AA%E3%83%83%E3%82%B8-%E3%82%B2%E3%83%BC%E3%83%A0-%E3%82%A8%E3%83%BC%E3%82%B9-%E3%82%A6%E3%82%A8%E3%82%B9%E3%83%88-%E3%82%AB%E3%82%B8%E3%83%8E-1201258/
+          %ul#PAN
+            %li index
+        %hr
+        #MENU
+        #KIZI
+          %h2 残り山札
+          .text
+            %h3 説明
+            %p
+              サーバ上の山札からカードを引くやつです。
+            %h3 結果
+            %p
+              あなたが引いたカードはこれ！
+            %p
+              #{@card[:type]}の#{@card[:num]}
+        #FOOTER
+          &nbsp;
