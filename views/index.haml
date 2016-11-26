@@ -5,6 +5,7 @@
   %head
     %script{src: "/js/jquery-3.1.1.min.js"}
     %link{rel: "stylesheet", href: "css/style.css", type: "text/css"}
+    %link{rel: "stylesheet", href: "css/index.css", type: "text/css"}
     %title トランプの山札からカードを引くやつ
     %body#INDEX
       #PAGETOP
@@ -23,9 +24,13 @@
             %p
               サーバ上の山札からカードを引くやつです。
             %h3 結果
+            - #トランプの柄画像配布元
+            - #http://sozai.7gates.net/docs/trump/
             %p
               あなたが引いたカードはこれ！
             %p
               #{@card[:type]}の#{@card[:num]}
+            %p
+              %img{src: getcardimagepath(@card[:type], @card[:num])}
         #FOOTER
           &nbsp;
