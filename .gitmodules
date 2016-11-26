@@ -1,0 +1,3 @@
+[submodule "lib/playcards"]
+	path = lib/playcards
+	url = https://github.com/felinebabies/playcards.git
