@@ -29,7 +29,10 @@
             %p
               あなたが引いたカードはこれ！
             %p
-              #{@card[:type]}の#{@card[:num]}
+              - if @card[:type] == "joker" then
+                ジョーカー
+              - else
+                #{@card[:type]}の#{@card[:num]}
             %p
               %img{src: getcardimagepath(@card[:type], @card[:num])}
         #FOOTER
