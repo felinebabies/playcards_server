@@ -1,4 +1,6 @@
 # coding: utf-8
+require 'bundler'
+Bundler.require
 require "securerandom"
 require 'digest/sha1'
 require 'json'
@@ -69,7 +71,7 @@ module PlayCardDb
 		deckrecord = db.execute(selectsql)
 		if deckrecord.count == 0 then
 			return nil
-		else
+		end
 
 		#シャッフル済みデッキのjsonオブジェクトを配列に変換して返す
 		deckjson = deckrecord.first[2]
@@ -131,16 +133,17 @@ module PlayCardDb
 			deckid)
 		db.close
 
-		cardsobj = cardrecords.map do |item|
+		cardsobjarr = cardrecords.map do |item|
 			cardobj = {
 				id: item[0],
 				drawtime: item[1],
-				cardid: item[2]
+				deckid: item[2],
+				cardid: item[3]
 			}
-			return cardobj
+			cardobj
 		end
 
-		return cardsobj
+		return cardsobjarr
 	end
 
 	#今までに引いたカードを新しい方から指定枚数取得する
@@ -156,16 +159,17 @@ module PlayCardDb
 
 		db.close
 
-		cardsobj = cardrecords.map do |item|
+		cardsobjarr = cardrecords.map do |item|
 			cardobj = {
 				id: item[0],
 				drawtime: item[1],
-				cardid: item[2]
+				deckid: item[2],
+				cardid: item[3]
 			}
-			return cardobj
+			cardobj
 		end
 
-		return cardsobj
+		return cardsobjarr
 	end
 
 	#引いたカードに対するコメントを記録する
@@ -200,12 +204,20 @@ module PlayCardDb
 	end
 
 	#カードに対してついたコメントを検索して返す
-	def getcardcommentbycardsobj(cardsobj)
-		selectsql = "SELECT * FROM CARD_COMMENT ORDER BY id desc WHERE drawcard_id IN(?)"
+	def getcardcommentbycardsobj(cardsobj = [])
+		if cardsobj.empty? then
+			return nil
+		end
+		if cardsobj.length <= 1 then
+			selectsql = "SELECT * FROM CARD_COMMENT WHERE drawcard_id = ? ORDER BY id desc"
+			idliststr = cardsobj.first.to_s
+		else
+			selectsql = "SELECT * FROM CARD_COMMENT WHERE drawcard_id IN(?) ORDER BY id desc"
+			idliststr = cardsobj.select{|item| item[0]}.join(',')
+		end
 
-		idliststr = cardsobj.select{|item| item[0]}.join(',')
 		db = SQLite3::Database.new(DBFILENAME)
-		commentrecords = db.execute(selectsql)
+		commentrecords = db.execute(selectsql, idliststr)
 		db.close
 
 		commentobjarr = commentrecords.map do |item|
@@ -215,14 +227,14 @@ module PlayCardDb
 				drawcardid: item[2],
 				commentstr: item[3]
 			}
-			return commentobj
+			commentobj
 		end
 	end
 
 	def generate_salt
 	  Digest::SHA1.hexdigest("#{Time.now.to_s}")
 	end
-	
+
 	module_function :createtable
 	module_function :tableexists?
 	module_function :getnewestdeck
@@ -232,4 +244,81 @@ module PlayCardDb
 	module_function :getalreadydrawn
 	module_function :savecardcomment
 	module_function :getcardcommentbycardsobj
+	module_function :generate_salt
+end
+
+if __FILE__ == $0 then
+	require_relative "playcards/playcards.rb"
+
+	currentdir = File.dirname(__FILE__)
+	dbfilepath = File.join(currentdir, PlayCardDb::DBFILENAME)
+	# テスト用DBが残っていれば削除
+	FileUtils.rm(dbfilepath) if File.exists?(dbfilepath)
+
+	puts "新しくテーブルを生成します"
+	unless PlayCardDb.tableexists? then
+		PlayCardDb.createtable
+	end
+
+	puts "最新のデッキを取得　nilが帰ってくれば成功"
+	if PlayCardDb.getnewestdeck() == nil then
+		puts "nilが帰ってきました"
+	else
+		puts "nil以外が帰ってきました"
+	end
+
+	puts "新しくシャッフルしたデッキをDBに登録します"
+	cards = Playcards.new
+	PlayCardDb.savedeckrecord(cards.getjson())
+
+	puts "最新のデッキを取得　nilではないオブジェクトが帰ってくれば成功"
+	deckobj = PlayCardDb.getnewestdeck()
+	if deckobj == nil then
+		puts "nilが帰ってきました"
+	else
+		puts "nil以外が帰ってきました"
+		puts deckobj
+	end
+
+	puts "DBを元に新しい山札を作りました"
+	cards2 = Playcards.new(deckobj[:deckarr], 0)
+
+	puts "新しい山札からすべてのカードを引きます"
+  until (card = cards2.draw) == nil do
+    print card.to_s + ","
+  end
+
+	puts "DBを元に別の新しい山札を作りました"
+	cards3 = Playcards.new(deckobj[:deckarr], 0)
+
+	puts "一枚カードを引き、DBにセーブします"
+	card = cards3.draw
+	puts "カード#{cards3.getcardinfo(card)}を引きました"
+	PlayCardDb.savecardrecord(deckobj[:id], card)
+	puts "カード#{cards3.getcardinfo(card)}をDBに保存しました"
+
+	puts "DBから、今まで引いたカードを取得します"
+	drawnarr = PlayCardDb.getalreadydrawn()
+	puts drawnarr
+	puts "DBから、今まで引いたカードをデッキIDを指定して取得します"
+	drawnarr = PlayCardDb.getalreadydrawnbyid(1)
+	puts drawnarr
+
+	puts "もう一枚カードを引き、DBにセーブします"
+	card = cards3.draw
+	puts "カード#{cards3.getcardinfo(card)}を引きました"
+	PlayCardDb.savecardrecord(deckobj[:id], card)
+	puts "カード#{cards3.getcardinfo(card)}をDBに保存しました"
+
+	puts "DBから、今まで引いたカードを取得します"
+	drawnarr = PlayCardDb.getalreadydrawn()
+	p drawnarr
+
+	puts "引いたカードに対するコメントをつけます"
+	PlayCardDb.savecardcomment(drawnarr.first[:id], "テストコメント1です。", "hoge")
+	PlayCardDb.savecardcomment(drawnarr.first[:id], "テストコメント2です。", "hoge")
+
+	puts "コメントを確認します"
+	p PlayCardDb.getcardcommentbycardsobj([drawnarr.first[:id]])
+
 end
