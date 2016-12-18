@@ -2,6 +2,7 @@
 require 'bundler'
 Bundler.require
 
+require "json"
 require_relative './lib/playcards/playcards.rb'
 
 class PlayCardsServer < Sinatra::Base
@@ -39,9 +40,19 @@ class PlayCardsServer < Sinatra::Base
 
   #トップページ
   get '/' do
-    cards = Playcards.new
-    @card = cards.getcardinfo(cards.draw)
     haml :index
+  end
+
+  #json カードを一枚引く
+  get '/drawcard' do
+    cards = Playcards.new
+    card = cards.getcardinfo(cards.draw)
+    card[:imgurl] = getcardimagepath(card[:type], card[:num])
+    if card == nil then
+      #カードが尽きた場合
+      card = {:type => "empty", :num => "0"}
+    end
+    card.to_json
   end
 
   # Rubyファイルが直接実行されたらサーバを立ち上げる
