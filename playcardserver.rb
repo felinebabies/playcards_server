@@ -4,6 +4,7 @@ Bundler.require
 
 require "json"
 require_relative './lib/playcards/playcards.rb'
+require_relative './lib/playcarddb.rb'
 
 class PlayCardsServer < Sinatra::Base
   register Sinatra::Reloader
@@ -45,14 +46,40 @@ class PlayCardsServer < Sinatra::Base
 
   #json カードを一枚引く
   get '/drawcard' do
-    cards = Playcards.new
-    card = cards.getcardinfo(cards.draw)
-    card[:imgurl] = getcardimagepath(card[:type], card[:num])
+    # データベースにテーブルが存在しなければ追加
+  	unless PlayCardDb.tableexists? then
+  		PlayCardDb.createtable
+  	end
+
+    # 最新のデッキを確認し、デッキが無ければ新しくデッキを作る
+  	deckobj = PlayCardDb.getnewestdeck()
+  	if deckobj == nil then
+    	newcards = Playcards.new
+    	PlayCardDb.savedeckrecord(newcards.getjson())
+
+      # 最新のデッキを取得する
+    	deckobj = PlayCardDb.getnewestdeck()
+    end
+
+    # 登録済みのカードを検索する
+  	drawnarr = PlayCardDb.getalreadydrawnbyid(deckobj[:id])
+    drawncount = drawnarr.length
+
+    cards = Playcards.new(deckobj[:deckarr], drawncount)
+    card = cards.draw
     if card == nil then
       #カードが尽きた場合
-      card = {:type => "empty", :num => "0"}
+      cardinfo = {:type => "empty", :num => "0"}
+    else
+      # 引いたカードをDBに登録する
+      PlayCardDb.savecardrecord(deckobj[:id], card)
+
+      # カードの情報を取得する
+      cardinfo = cards.getcardinfo(card)
+      cardinfo[:imgurl] = getcardimagepath(cardinfo[:type], cardinfo[:num])
     end
-    card.to_json
+
+    cardinfo.to_json
   end
 
   # Rubyファイルが直接実行されたらサーバを立ち上げる
