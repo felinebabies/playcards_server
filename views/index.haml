@@ -19,14 +19,21 @@
         %hr
         #MENU
         #KIZI
-          %h2 残り山札
+          %h2 説明
           .text
-            %h3 説明
             %p
               サーバ上の山札からカードを引くやつです。
-            %h3
-              カードを引く
+
+          %h2 カード操作
+          .text
+            %h3 操作ボタン
             %input{:type => "button",:name => "drawcardbutton", :id => "drawcardbutton", :value => "カードを一枚引く"}
+            %input{:type => "button",:name => "shufflebutton", :id => "shufflebutton", :value => "デッキをシャッフルする"}
+
+            .flashmessage
+              %h3 メッセージ
+              %p
+                &nbsp;
 
             .cardresult
               %h3 結果

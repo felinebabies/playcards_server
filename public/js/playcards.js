@@ -1,3 +1,12 @@
+function setFlashMessage(textmessage){
+  $(".flashmessage p").text(textmessage);
+  $(".flashmessage").slideDown(function(){
+    setTimeout(function(){
+      $(".flashmessage").slideUp();
+    }, 3000);
+  });
+}
+
 $(document).ready(function(){
   $("#drawcardbutton").click(function(){
     // ajaxでカードを一枚引く
@@ -25,6 +34,20 @@ $(document).ready(function(){
         alert("山札の残り枚数が0です。")
       }
     });
+
+  });
+
+  // シャッフルボタンの処理
+  $("#shufflebutton").click(function(){
+    var result = $.ajax({
+      type: 'GET',
+      url: location.href + '/shuffle',
+      async: false
+    }).responseText;
+    var deckdata = $.parseJSON(result)
+
+    // フラッシュメッセージを表示する
+    setFlashMessage("山札をシャッフルしました。")
 
   });
 });

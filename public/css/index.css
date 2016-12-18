@@ -1,3 +1,7 @@
 .cardresult {
   display: none;
 }
+
+.flashmessage {
+  display: none;
+}

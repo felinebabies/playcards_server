@@ -82,6 +82,26 @@ class PlayCardsServer < Sinatra::Base
     cardinfo.to_json
   end
 
+  #デッキをシャッフルして結果を返す
+  get '/shuffle' do
+    # データベースにテーブルが存在しなければ追加
+  	unless PlayCardDb.tableexists? then
+  		PlayCardDb.createtable
+  	end
+
+  	newcards = Playcards.new
+  	PlayCardDb.savedeckrecord(newcards.getjson())
+
+    # 最新のデッキを取得する
+  	deckobj = PlayCardDb.getnewestdeck()
+
+    deckinfoobj = {
+      :id => deckobj[:id]
+    }
+
+    deckinfoobj.to_json
+  end
+
   # Rubyファイルが直接実行されたらサーバを立ち上げる
   run! if app_file == $0
 end
