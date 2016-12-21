@@ -26,6 +26,9 @@
 
           %h2 カード操作
           .text
+            %h3 残り山札
+            %p.cardleftcount
+              &nbsp;
             %h3 操作ボタン
             %input{:type => "button",:name => "drawcardbutton", :id => "drawcardbutton", :value => "カードを一枚引く"}
             %input{:type => "button",:name => "shufflebutton", :id => "shufflebutton", :value => "デッキをシャッフルする"}

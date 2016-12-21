@@ -7,7 +7,22 @@ function setFlashMessage(textmessage){
   });
 }
 
+// 山札のカードの残数を取得する
+function getCardLeftCount(){
+  var result = $.ajax({
+    type: 'GET',
+    url: location.href + '/deckleft',
+    async: false
+  }).responseText;
+  var leftdata = $.parseJSON(result)
+
+  $("p.cardleftcount").text("残り" + leftdata["left"] + "枚")
+}
+
 $(document).ready(function(){
+  // 残り枚数を表示する
+  getCardLeftCount();
+
   $("#drawcardbutton").click(function(){
     // ajaxでカードを一枚引く
     var result = $.ajax({
@@ -33,6 +48,8 @@ $(document).ready(function(){
       else{
         alert("山札の残り枚数が0です。")
       }
+      // 残り枚数表示を更新する
+      getCardLeftCount();
     });
 
   });
@@ -46,6 +63,9 @@ $(document).ready(function(){
     }).responseText;
     var deckdata = $.parseJSON(result)
 
+    // 残り枚数表示を更新する
+    getCardLeftCount();
+    
     // フラッシュメッセージを表示する
     setFlashMessage("山札をシャッフルしました。")
 
