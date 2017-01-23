@@ -48,5 +48,23 @@
                 &nbsp;
               %p.carddrawnimg
                 &nbsp;
+            %h2 今までに引いたカード
+            %ul
+              - @recentarr.each do |recentcard|
+                %li
+                  デッキID:
+                  = recentcard[:deckid]
+                  カード:
+                  = recentcard[:cardtype][:type]
+                  の
+                  = recentcard[:cardtype][:num]
+                  日時:
+                  = recentcard[:drawtime]
+                  - unless recentcard[:comments].empty? then
+                    %ul.comments
+                      - recentcard[:comments].each do |cardcomment|
+                        %li
+                          = cardcomment[:date]
+                          = cardcomment[:str]
         #FOOTER
           &nbsp;

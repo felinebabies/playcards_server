@@ -39,8 +39,28 @@ class PlayCardsServer < Sinatra::Base
     end
   end
 
+  # 最近に引いた10枚分のカードの履歴を返す
+  def getrecentcards(limit = 10)
+    recentcards = PlayCardDb.getalreadydrawn(limit)
+
+    cards = Playcards.new()
+
+    recentcards.map! do |carditem|
+      # カードの情報を取得する
+      carditem[:cardtype] = cards.getcardinfo(carditem[:cardid])
+      carditem[:comments] = [
+        {:date => "2017-01-23 23:21:08", :str => "コメントテストです。"},
+        {:date => "2017-01-23 23:21:09", :str => "コメントテスト2です。"}
+      ]
+      carditem
+    end
+
+    return recentcards
+  end
+
   #トップページ
   get '/' do
+    @recentarr = getrecentcards()
     haml :index
   end
 
