@@ -210,14 +210,26 @@ module PlayCardDb
 		end
 		if cardsobj.length <= 1 then
 			selectsql = "SELECT * FROM CARD_COMMENT WHERE drawcard_id = ? ORDER BY id desc"
-			idliststr = cardsobj.first.to_s
+			idliststr = cardsobj.first[:id].to_s
 		else
-			selectsql = "SELECT * FROM CARD_COMMENT WHERE drawcard_id IN(?) ORDER BY id desc"
-			idliststr = cardsobj.select{|item| item[0]}.join(',')
+			idarr = cardsobj.map{|i| i[:id]};
+			selectsql = "SELECT * FROM CARD_COMMENT WHERE "
+			idarr.each_with_index do |item,idx|
+				if idx > 0 then
+					selectsql += "OR "
+				end
+				selectsql += "drawcard_id = ? "
+
+			end
+			selectsql += "ORDER BY id desc"
 		end
 
 		db = SQLite3::Database.new(DBFILENAME)
-		commentrecords = db.execute(selectsql, idliststr)
+		if cardsobj.length <= 1 then
+			commentrecords = db.execute(selectsql, idliststr)
+		else
+			commentrecords = db.execute(selectsql, idarr)
+		end
 		db.close
 
 		commentobjarr = commentrecords.map do |item|
@@ -229,6 +241,7 @@ module PlayCardDb
 			}
 			commentobj
 		end
+		return commentobjarr
 	end
 
 	def generate_salt

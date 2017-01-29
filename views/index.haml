@@ -30,7 +30,15 @@
             %p.cardleftcount
               &nbsp;
             %h3 操作ボタン
-            %input{:type => "button",:name => "drawcardbutton", :id => "drawcardbutton", :value => "カードを一枚引く"}
+            これから引くカードへのコメント
+            %br
+            %input{:type => "text",:name => "textcomment", :id => "textcomment", :maxlength => 140, :size => 80, :placeholder => "例：今晩の夕飯、赤が出たらラーメン。黒が出たらカレー。"}
+            %br
+            コメント削除用パスワード
+            %br
+            %input{:type => "password", :name => "deletepassword", :id => "deletepassword", :maxlength => 30, :size => 30}
+            %br
+            %input{:type => "button",:name => "drawcardbutton", :id => "drawcardbutton", :value => "カードを一枚引く+コメント送信"}
             %input{:type => "button",:name => "shufflebutton", :id => "shufflebutton", :value => "デッキをシャッフルする"}
 
             .flashmessage
@@ -64,7 +72,7 @@
                     %ul.comments
                       - recentcard[:comments].each do |cardcomment|
                         %li
-                          = cardcomment[:date]
-                          = cardcomment[:str]
+                          = cardcomment[:postime]
+                          = h(cardcomment[:commentstr])
         #FOOTER
           &nbsp;

@@ -26,11 +26,18 @@ $(document).ready(function(){
   $("#drawcardbutton").click(function(){
     // ajaxでカードを一枚引く
     var result = $.ajax({
-      type: 'GET',
+      type: 'POST',
       url: location.href + '/drawcard',
+      data: {
+        textcomment: $("#textcomment").val(),
+        deletepassword: $("#deletepassword").val()
+      },
       async: false
     }).responseText;
     var carddata = $.parseJSON(result)
+
+    // コメント欄の内容を消去する
+    textcomment: $("#textcomment").val("");
 
     $(".cardresult").slideUp(500,function(){
       // カードが尽きていなければ結果を表示する
@@ -65,7 +72,7 @@ $(document).ready(function(){
 
     // 残り枚数表示を更新する
     getCardLeftCount();
-    
+
     // フラッシュメッセージを表示する
     setFlashMessage("山札をシャッフルしました。")
 

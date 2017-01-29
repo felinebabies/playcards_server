@@ -9,6 +9,13 @@ require_relative './lib/playcarddb.rb'
 class PlayCardsServer < Sinatra::Base
   register Sinatra::Reloader
 
+  #ヘルパー定義
+	helpers do
+		#サニタイズ用関数を使用する用意
+		include Rack::Utils
+		alias_method :h, :escape_html
+	end
+  
   helpers do
     #カード情報から、カード画像へのパスを返す
     def getcardimagepath(type, number)
@@ -39,19 +46,28 @@ class PlayCardsServer < Sinatra::Base
     end
   end
 
-  # 最近に引いた10枚分のカードの履歴を返す
+  # 最近に引いた10枚分のカードの履歴とコメントを返す
   def getrecentcards(limit = 10)
     recentcards = PlayCardDb.getalreadydrawn(limit)
+
+    # カードについたコメントを検索する
+    commentsobj = []
+    if recentcards.length >= 1 then
+      cardidarr = recentcards.map do |carditem|
+        carditem[:id]
+      end
+      commentsobj = PlayCardDb.getcardcommentbycardsobj(recentcards)
+    end
 
     cards = Playcards.new()
 
     recentcards.map! do |carditem|
       # カードの情報を取得する
       carditem[:cardtype] = cards.getcardinfo(carditem[:cardid])
-      carditem[:comments] = [
-        {:date => "2017-01-23 23:21:08", :str => "コメントテストです。"},
-        {:date => "2017-01-23 23:21:09", :str => "コメントテスト2です。"}
-      ]
+      carditem[:comments] = commentsobj.select do |commentitem|
+        commentitem[:drawcardid] == carditem[:id]
+      end
+
       carditem
     end
 
@@ -65,7 +81,7 @@ class PlayCardsServer < Sinatra::Base
   end
 
   #json カードを一枚引く
-  get '/drawcard' do
+  post '/drawcard' do
     # データベースにテーブルが存在しなければ追加
   	unless PlayCardDb.tableexists? then
   		PlayCardDb.createtable
@@ -97,6 +113,15 @@ class PlayCardsServer < Sinatra::Base
       # カードの情報を取得する
       cardinfo = cards.getcardinfo(card)
       cardinfo[:imgurl] = getcardimagepath(cardinfo[:type], cardinfo[:num])
+
+      # コメントが付属していた場合、コメントを登録する
+      p params[:textcomment]
+      if params[:textcomment] != nil && (!params[:textcomment].empty?) then
+        commentdrawnarr = PlayCardDb.getalreadydrawn(1)
+        drawncardid = commentdrawnarr.first[:id]
+        PlayCardDb.savecardcomment(drawncardid, params[:textcomment], params[:deletepassword])
+      end
+
     end
 
     cardinfo.to_json
