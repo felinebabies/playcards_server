@@ -15,7 +15,7 @@ class PlayCardsServer < Sinatra::Base
 		include Rack::Utils
 		alias_method :h, :escape_html
 	end
-  
+
   helpers do
     #カード情報から、カード画像へのパスを返す
     def getcardimagepath(type, number)
@@ -115,7 +115,6 @@ class PlayCardsServer < Sinatra::Base
       cardinfo[:imgurl] = getcardimagepath(cardinfo[:type], cardinfo[:num])
 
       # コメントが付属していた場合、コメントを登録する
-      p params[:textcomment]
       if params[:textcomment] != nil && (!params[:textcomment].empty?) then
         commentdrawnarr = PlayCardDb.getalreadydrawn(1)
         drawncardid = commentdrawnarr.first[:id]
@@ -125,6 +124,17 @@ class PlayCardsServer < Sinatra::Base
     end
 
     cardinfo.to_json
+  end
+
+  #既存のカードにコメントを投稿する
+  post '/addcomment' do
+    # コメントが付属していた場合、コメントを登録する
+    if params[:textcomment] != nil && (!params[:textcomment].empty?) then
+      drawncardid = params[:targetid]
+      PlayCardDb.savecardcomment(drawncardid, params[:textcomment], params[:deletepassword])
+    end
+    
+    {:status => "success"}.to_json
   end
 
   #デッキをシャッフルして結果を返す

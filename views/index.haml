@@ -40,10 +40,10 @@
             %br
             %input{:type => "password", :name => "deletepassword", :id => "deletepassword", :maxlength => 30, :size => 30}
             %br
-            %input{:type => "button",:name => "drawcardbutton", :id => "drawcardbutton", :value => "カードを一枚引く+コメント送信"}
-            %input{:type => "button",:name => "shufflebutton", :id => "shufflebutton", :value => "デッキをシャッフルする"}
+            %input{:type => "button",:name => "drawcardbutton", :id => "drawcardbutton", :class => "jquery-ui-button", :value => "カードを一枚引く+コメント送信"}
+            %input{:type => "button",:name => "shufflebutton", :id => "shufflebutton", :class => "jquery-ui-button", :value => "デッキをシャッフルする"}
 
-            .flashmessage
+            .flashmessage.ui-state-highlight
               %h3 メッセージ
               %p
                 &nbsp;
@@ -62,7 +62,9 @@
             %ul
               - @recentarr.each do |recentcard|
                 %li
-                  デッキID:
+                  ID:
+                  = recentcard[:id]
+                  所属デッキ:
                   = recentcard[:deckid]
                   カード:
                   = recentcard[:cardtype][:type]
@@ -70,11 +72,27 @@
                   = recentcard[:cardtype][:num]
                   日時:
                   = recentcard[:drawtime]
+                  %span.clickabletext.addcomment{"data-recentcardid" => recentcard[:id]}
+                    [ここにコメント]
                   - unless recentcard[:comments].empty? then
                     %ul.comments
                       - recentcard[:comments].each do |cardcomment|
-                        %li
+                        %li.comment
                           = cardcomment[:postime]
                           = h(cardcomment[:commentstr])
+                          %span.clickabletext.deletecomment{"data-commentid" => cardcomment[:id]}
+                            [削除]
         #FOOTER
           &nbsp;
+        #addcommentdialog{:title => "コメントの追加"}
+          %form
+            %fieldset
+              %p コメントと削除用パスワードを入力して投稿ボタンを押してください。
+              %p
+                %label{:for => "addcommenttext"}
+                  コメント
+                %input{:type => "text",:name => "addcommenttext", :id => "addcommenttext", :maxlength => 140, :size => 80, :placeholder => "例：今晩の夕飯、赤が出たらラーメン。黒が出たらカレー。"}
+              %p
+                %label{:for => "addcommentpass"}
+                  削除用パスワード
+                %input{:type => "password", :name => "addcommentpass", :id => "addcommentpass", :maxlength => 30, :size => 30}

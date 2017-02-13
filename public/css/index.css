@@ -5,3 +5,8 @@
 .flashmessage {
   display: none;
 }
+
+.clickabletext {
+  cursor: pointer;
+  color: #0000FF;
+}

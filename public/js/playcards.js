@@ -20,6 +20,8 @@ function getCardLeftCount(){
 }
 
 $(document).ready(function(){
+  // ui設定
+  $(".jquery-ui-button").button();
   // 残り枚数を表示する
   getCardLeftCount();
 
@@ -36,7 +38,7 @@ $(document).ready(function(){
     }).responseText;
     var carddata = $.parseJSON(result)
 
-    // コメント欄の内容を消去する
+    // コメント入力欄の内容を消去する
     textcomment: $("#textcomment").val("");
 
     $(".cardresult").slideUp(500,function(){
@@ -76,5 +78,44 @@ $(document).ready(function(){
     // フラッシュメッセージを表示する
     setFlashMessage("山札をシャッフルしました。")
 
+  });
+
+  $("#addcommentdialog").dialog({
+    autoOpen: false,
+    width: 550,
+    show: 'explode',
+    hide: 'explode',
+    modal: true,
+    buttons: {
+      "投稿": function(){
+        // ajaxでコメントを投稿する
+        var result = $.ajax({
+          type: 'POST',
+          url: location.href + '/addcomment',
+          data: {
+            textcomment: $("#addcommenttext").val(),
+            deletepassword: $("#addcommentpass").val(),
+            targetid: $("#addcommentdialog").data("recentcardid")
+          },
+          async: false
+        }).responseText;
+        var carddata = $.parseJSON(result)
+
+        setFlashMessage("コメントの投稿を受け付けました。");
+        $(this).dialog("close");
+      },
+      "キャンセル": function() {
+        $(this).dialog("close");
+      }
+    }
+  });
+
+  // コメント返信ボタンの処理
+  $(".addcomment").click(function(){
+    // コメント対象のIDを設定
+    var targetcardid = $(this).data("recentcardid");
+    $("#addcommentdialog").data("recentcardid", targetcardid);
+    // コメント投稿用ダイアログを作って開く
+    $("#addcommentdialog").dialog("open");
   });
 });
