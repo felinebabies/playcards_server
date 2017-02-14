@@ -125,6 +125,9 @@ $(document).ready(function(){
         }).responseText;
         var commentstatus = $.parseJSON(result)
 
+        // コメント入力欄の内容を消去する
+        textcomment: $("#addcommenttext").val("");
+
         if(commentstatus["status"] == "success"){
           setFlashMessage("コメントの投稿を受け付けました。");
           updateRecentCards();
