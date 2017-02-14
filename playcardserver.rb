@@ -128,13 +128,24 @@ class PlayCardsServer < Sinatra::Base
 
   #既存のカードにコメントを投稿する
   post '/addcomment' do
+    commentstatus = ""
     # コメントが付属していた場合、コメントを登録する
     if params[:textcomment] != nil && (!params[:textcomment].empty?) then
       drawncardid = params[:targetid]
       PlayCardDb.savecardcomment(drawncardid, params[:textcomment], params[:deletepassword])
+
+      commentstatus = "success"
+    else
+      commentstatus = "failed"
     end
-    
-    {:status => "success"}.to_json
+
+    {:status => commentstatus}.to_json
+  end
+
+  #今までに引いたカードとコメントの一覧を返す
+  get '/recentcards' do
+    @recentarr = getrecentcards()
+    haml :_recentcomments
   end
 
   #デッキをシャッフルして結果を返す

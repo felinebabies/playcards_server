@@ -14,9 +14,30 @@ function getCardLeftCount(){
     url: location.href + '/deckleft',
     async: false
   }).responseText;
-  var leftdata = $.parseJSON(result)
+  var leftdata = $.parseJSON(result);
 
-  $("p.cardleftcount").text("残り" + leftdata["left"] + "枚")
+  $("p.cardleftcount").text("残り" + leftdata["left"] + "枚");
+}
+
+function setAddCommentEvent(){
+  $(".addcomment").click(function(){
+    // コメント対象のIDを設定
+    var targetcardid = $(this).data("recentcardid");
+    $("#addcommentdialog").data("recentcardid", targetcardid);
+    // コメント投稿用ダイアログを作って開く
+    $("#addcommentdialog").dialog("open");
+  });
+}
+
+function updateRecentCards(){
+  var result = $.ajax({
+    type: 'GET',
+    url: location.href + '/recentcards',
+    async: false
+  }).responseText;
+
+  $("#recentComments").html(result);
+  setAddCommentEvent();
 }
 
 $(document).ready(function(){
@@ -59,6 +80,9 @@ $(document).ready(function(){
       }
       // 残り枚数表示を更新する
       getCardLeftCount();
+
+      // 今までに引いたカード一覧を更新する
+      updateRecentCards();
     });
 
   });
@@ -99,9 +123,14 @@ $(document).ready(function(){
           },
           async: false
         }).responseText;
-        var carddata = $.parseJSON(result)
+        var commentstatus = $.parseJSON(result)
 
-        setFlashMessage("コメントの投稿を受け付けました。");
+        if(commentstatus["status"] == "success"){
+          setFlashMessage("コメントの投稿を受け付けました。");
+          updateRecentCards();
+        } else {
+          setFlashMessage("コメントを投稿することができませんでした。");
+        }
         $(this).dialog("close");
       },
       "キャンセル": function() {
@@ -111,11 +140,5 @@ $(document).ready(function(){
   });
 
   // コメント返信ボタンの処理
-  $(".addcomment").click(function(){
-    // コメント対象のIDを設定
-    var targetcardid = $(this).data("recentcardid");
-    $("#addcommentdialog").data("recentcardid", targetcardid);
-    // コメント投稿用ダイアログを作って開く
-    $("#addcommentdialog").dialog("open");
-  });
+  setAddCommentEvent();
 });

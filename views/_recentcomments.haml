@@ -1,0 +1,23 @@
+%ul
+  - @recentarr.each do |recentcard|
+    %li
+      ID:
+      = recentcard[:id]
+      所属デッキ:
+      = recentcard[:deckid]
+      カード:
+      = recentcard[:cardtype][:type]
+      の
+      = recentcard[:cardtype][:num]
+      日時:
+      = recentcard[:drawtime]
+      %span.clickabletext.addcomment{"data-recentcardid" => recentcard[:id]}
+        [ここにコメント]
+      - unless recentcard[:comments].empty? then
+        %ul.comments
+          - recentcard[:comments].each do |cardcomment|
+            %li.comment
+              = cardcomment[:postime]
+              = h(cardcomment[:commentstr])
+              %span.clickabletext.deletecomment{"data-commentid" => cardcomment[:id]}
+                [削除]
