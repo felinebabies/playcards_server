@@ -6,6 +6,16 @@ require "json"
 require_relative './lib/playcards/playcards.rb'
 require_relative './lib/playcarddb.rb'
 
+# コメント削除パスワードが正しいかを判定する
+def valid_deletepath?(commentid, deletepass)
+	commentobj = PlayCardDb.getcardcommentbyid(commentid)
+
+	# 削除パスワードをハッシュ化する
+	hashedPass = deletepass.crypt(commentobj[:salt])
+
+	hashedPass == commentobj[:passwordhash]
+end
+
 class PlayCardsServer < Sinatra::Base
   register Sinatra::Reloader
 
@@ -192,6 +202,23 @@ class PlayCardsServer < Sinatra::Base
     }
 
     returnobj.to_json
+  end
+
+  #コメントを削除する
+  post '/deletecomment' do
+    status = ""
+		if valid_deletepath?(params[:commentid], params[:deletepassword]) then
+			PlayCardDb.setcommentvalid(0, params[:commentid])
+			status = "success"
+		else
+      status = "failed"
+		end
+
+    returnobj = {
+      :status => status
+    }
+
+		returnobj.to_json
   end
 
   # Rubyファイルが直接実行されたらサーバを立ち上げる

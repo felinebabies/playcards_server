@@ -8,6 +8,7 @@
     %script{src: "/js/playcards.js"}
     %link{rel: "stylesheet", href: "css/style.css", type: "text/css"}
     %link{rel: "stylesheet", href: "css/jquery-ui.min.css", type: "text/css"}
+    %link{rel: "stylesheet", href: "css/jquery-ui.theme.min.css", type: "text/css"}
     %link{rel: "stylesheet", href: "css/index.css", type: "text/css"}
     %title トランプの山札からカードを引くやつ
     %body#INDEX
@@ -75,3 +76,15 @@
                 %label{:for => "addcommentpass"}
                   削除用パスワード
                 %input{:type => "password", :name => "addcommentpass", :id => "addcommentpass", :maxlength => 30, :size => 30}
+        #deletecommentdialog{:title => "コメントの削除"}
+          %form
+            %fieldset
+              %p
+                削除対象コメント：
+                %span#targetcommentstr
+                  &nbsp;
+              %p コメント投稿時に設定した削除パスワードを入力して投稿ボタンを押してください。
+              %p
+                %label{:for => "deletecommentpass"}
+                  削除用パスワード
+                %input{:type => "password", :name => "deletecommentpass", :id => "deletecommentpass", :maxlength => 30, :size => 30}

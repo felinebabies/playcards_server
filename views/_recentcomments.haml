@@ -16,8 +16,14 @@
       - unless recentcard[:comments].empty? then
         %ul.comments
           - recentcard[:comments].each do |cardcomment|
-            %li.comment
-              = cardcomment[:postime]
-              = h(cardcomment[:commentstr])
-              %span.clickabletext.deletecomment{"data-commentid" => cardcomment[:id]}
-                [削除]
+            - if cardcomment[:valid] != 0 then
+              %li.comment
+                = cardcomment[:postime]
+                %span.commentbody
+                  = h(cardcomment[:commentstr])
+                %span.clickabletext.deletecomment{"data-commentid" => cardcomment[:id]}
+                  [削除]
+            - else
+              %li.comment.deleted
+                = cardcomment[:postime]
+                このコメントは削除済みです

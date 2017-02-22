@@ -10,3 +10,7 @@
   cursor: pointer;
   color: #0000FF;
 }
+
+.comment.deleted {
+  color: #CCC;
+}

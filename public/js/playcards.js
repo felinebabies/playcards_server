@@ -27,8 +27,18 @@ function setAddCommentEvent(){
     // コメント投稿用ダイアログを作って開く
     $("#addcommentdialog").dialog("open");
   });
+  $(".deletecomment").click(function(){
+    // コメント対象のIDを設定
+    var targetcommentid = $(this).data("commentid");
+    $("#deletecommentdialog").data("commentid", targetcommentid);
+    // コメント本文をダイアログに設定
+    $("#targetcommentstr").text($(this).prev(".commentbody").text());
+    // コメント投稿用ダイアログを作って開く
+    $("#deletecommentdialog").dialog("open");
+  });
 }
 
+//最近引いたカードとコメントの一覧を更新する
 function updateRecentCards(){
   var result = $.ajax({
     type: 'GET',
@@ -133,6 +143,40 @@ $(document).ready(function(){
           updateRecentCards();
         } else {
           setFlashMessage("コメントを投稿することができませんでした。");
+        }
+        $(this).dialog("close");
+      },
+      "キャンセル": function() {
+        $(this).dialog("close");
+      }
+    }
+  });
+
+  $("#deletecommentdialog").dialog({
+    autoOpen: false,
+    width: 550,
+    show: 'explode',
+    hide: 'explode',
+    modal: true,
+    buttons: {
+      "削除実行": function(){
+        // ajaxで削除を投げる
+        var result = $.ajax({
+          type: 'POST',
+          url: location.href + '/deletecomment',
+          data: {
+            deletepassword: $("#deletecommentpass").val(),
+            commentid: $("#deletecommentdialog").data("commentid")
+          },
+          async: false
+        }).responseText;
+        var deletestatus = $.parseJSON(result)
+
+        if(deletestatus["status"] == "success"){
+          setFlashMessage("コメントの削除を受け付けました。");
+          updateRecentCards();
+        } else {
+          setFlashMessage("コメントを削除することができませんでした。");
         }
         $(this).dialog("close");
       },

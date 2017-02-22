@@ -33,7 +33,8 @@ module PlayCardDb
 			drawcard_id integer NOT NULL,
 			comment text NOT NULL,
 			passwordhash text NOT NULL,
-			salt text NOT NULL
+			salt text NOT NULL,
+			valid integer NOT NULL
 		);
 		SQL
 		db = SQLite3::Database.new(DBFILENAME)
@@ -182,7 +183,8 @@ module PlayCardDb
 					?,
 					?,
 					?,
-					?
+					?,
+					1
 				)
 		SQL
 
@@ -201,6 +203,32 @@ module PlayCardDb
 			salt
 		)
 		db.close
+	end
+
+	#カードに対してついたコメントをid指定で検索して返す
+	def getcardcommentbyid(commentid)
+		selectsql = "SELECT * FROM CARD_COMMENT WHERE id = ?"
+		db = SQLite3::Database.new(DBFILENAME)
+		commentrecord = db.execute(selectsql, commentid)
+
+		if commentrecord.empty? then
+			return nil
+		end
+
+		commentobjarr = commentrecord.map do |item|
+			commentobj = {
+				id: item[0],
+				postime: item[1],
+				drawcardid: item[2],
+				commentstr: item[3],
+				passwordhash: item[4],
+				salt: item[5],
+				valid: item[6]
+			}
+			commentobj
+		end
+
+		return commentobjarr.first
 	end
 
 	#カードに対してついたコメントを検索して返す
@@ -232,16 +260,34 @@ module PlayCardDb
 		end
 		db.close
 
+		if commentrecords.empty? then
+			return nil
+		end
+
 		commentobjarr = commentrecords.map do |item|
 			commentobj = {
 				id: item[0],
 				postime: item[1],
 				drawcardid: item[2],
-				commentstr: item[3]
+				commentstr: item[3],
+				valid: item[6]
 			}
 			commentobj
 		end
 		return commentobjarr
+	end
+
+	#コメントの有効状態を変更する
+	def setcommentvalid(isvalid, commentid)
+		updatesql = "UPDATE CARD_COMMENT SET valid = ? WHERE id = ?"
+
+		#アップデート実行
+		db = SQLite3::Database.new(DBFILENAME)
+		db.execute(updatesql,
+			isvalid,
+			commentid
+		)
+		db.close
 	end
 
 	def generate_salt
@@ -256,7 +302,9 @@ module PlayCardDb
 	module_function :getalreadydrawnbyid
 	module_function :getalreadydrawn
 	module_function :savecardcomment
+	module_function :getcardcommentbyid
 	module_function :getcardcommentbycardsobj
+	module_function :setcommentvalid
 	module_function :generate_salt
 end
 
