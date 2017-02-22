@@ -1,0 +1,24 @@
+#addcommentdialog{:title => "コメントの追加"}
+  %form
+    %fieldset
+      %p コメントと削除用パスワードを入力して投稿ボタンを押してください。
+      %p
+        %label{:for => "addcommenttext"}
+          コメント
+        %input{:type => "text",:name => "addcommenttext", :id => "addcommenttext", :maxlength => 140, :size => 80, :placeholder => "例：今晩の夕飯、赤が出たらラーメン。黒が出たらカレー。"}
+      %p
+        %label{:for => "addcommentpass"}
+          削除用パスワード
+        %input{:type => "password", :name => "addcommentpass", :id => "addcommentpass", :maxlength => 30, :size => 30}
+#deletecommentdialog{:title => "コメントの削除"}
+  %form
+    %fieldset
+      %p
+        削除対象コメント：
+        %span#targetcommentstr
+          &nbsp;
+      %p コメント投稿時に設定した削除パスワードを入力して投稿ボタンを押してください。
+      %p
+        %label{:for => "deletecommentpass"}
+          削除用パスワード
+        %input{:type => "password", :name => "deletecommentpass", :id => "deletecommentpass", :maxlength => 30, :size => 30}
