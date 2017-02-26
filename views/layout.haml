@@ -8,6 +8,9 @@
     %script{src: "/js/playcards.js"}
     - @importjsarr.each do |js|
       %script{src: js }
+    - find_template settings.views, "_analitycs", Tilt[:haml] do |file|
+      - if File.exist?(file) then
+        = haml :_analitycs
     %link{rel: "stylesheet", href: "css/style.css", type: "text/css"}
     %link{rel: "stylesheet", href: "css/jquery-ui.min.css", type: "text/css"}
     %link{rel: "stylesheet", href: "css/jquery-ui.theme.min.css", type: "text/css"}
