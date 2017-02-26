@@ -1,0 +1,27 @@
+#PAGETOP
+  #HEADER
+    %h1 トランプの山札からカードを引くやつ
+    - # トップ画像配布元
+    - # https://pixabay.com/ja/%E3%83%88%E3%83%A9%E3%83%B3%E3%83%97-%E7%81%AB%E3%81%8B%E3%81%8D%E6%A3%92-%E3%83%96%E3%83%AA%E3%83%83%E3%82%B8-%E3%82%B2%E3%83%BC%E3%83%A0-%E3%82%A8%E3%83%BC%E3%82%B9-%E3%82%A6%E3%82%A8%E3%82%B9%E3%83%88-%E3%82%AB%E3%82%B8%E3%83%8E-1201258/
+    %ul#PAN
+      %li index
+  %hr
+  #MENU
+    %h2 menu
+    %ul
+      %li#MENU01
+        %a{:href => "/"} index
+      %li#MENU02.menu-on
+        %a{:href => "/allcomments"} log
+  #KIZI
+    .text
+      .flashmessage.ui-state-highlight
+        %h3 メッセージ
+        %p
+          &nbsp;
+      %h2 今までに引いたカード
+      #recentComments
+        = haml :_recentcomments
+  #FOOTER
+    &nbsp;
+  = haml :_jquery_ui_dialogs

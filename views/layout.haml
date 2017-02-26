@@ -1,0 +1,17 @@
+!!!
+- #テンプレート配布元
+- #http://az-store.nrym.org/
+%html
+  %head
+    %script{src: "/js/jquery-3.1.1.min.js"}
+    %script{src: "/js/jquery-ui.min.js"}
+    %script{src: "/js/playcards.js"}
+    - @importjsarr.each do |js|
+      %script{src: js }
+    %link{rel: "stylesheet", href: "css/style.css", type: "text/css"}
+    %link{rel: "stylesheet", href: "css/jquery-ui.min.css", type: "text/css"}
+    %link{rel: "stylesheet", href: "css/jquery-ui.theme.min.css", type: "text/css"}
+    %link{rel: "stylesheet", href: "css/index.css", type: "text/css"}
+    %title トランプの山札からカードを引くやつ
+    %body#INDEX
+      = yield

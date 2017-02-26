@@ -87,6 +87,7 @@ class PlayCardsServer < Sinatra::Base
   #トップページ
   get '/' do
     @recentarr = getrecentcards()
+		@importjsarr = ["/js/index.js"]
     haml :index
   end
 
@@ -136,6 +137,14 @@ class PlayCardsServer < Sinatra::Base
     cardinfo.to_json
   end
 
+	# コメント一覧ページを表示する
+	get '/allcomments' do
+		#コメント、カードの全記録を取得する
+    @recentarr = getrecentcards(0)
+		@importjsarr = ["/js/allcomments.js"]
+    haml :allcomments
+	end
+
   #既存のカードにコメントを投稿する
   post '/addcomment' do
     commentstatus = ""
@@ -155,7 +164,7 @@ class PlayCardsServer < Sinatra::Base
   #今までに引いたカードとコメントの一覧を返す
   get '/recentcards' do
     @recentarr = getrecentcards()
-    haml :_recentcomments
+    haml :_recentcomments, :layout => nil
   end
 
   #デッキをシャッフルして結果を返す

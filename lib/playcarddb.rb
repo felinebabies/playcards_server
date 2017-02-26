@@ -150,7 +150,7 @@ module PlayCardDb
 	#今までに引いたカードを新しい方から指定枚数取得する
 	def getalreadydrawn(limit = nil)
 		db = SQLite3::Database.new(DBFILENAME)
-		if limit != nil then
+		if limit != nil && limit != 0 then
 			selectsql = "SELECT * FROM DRAW_CARD ORDER BY id desc LIMIT ?"
 			cardrecords = db.execute(selectsql,	limit)
 		else

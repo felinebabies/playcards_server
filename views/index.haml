@@ -1,67 +1,59 @@
-!!!
-- #テンプレート配布元
-- #http://az-store.nrym.org/
-%html
-  %head
-    %script{src: "/js/jquery-3.1.1.min.js"}
-    %script{src: "/js/jquery-ui.min.js"}
-    %script{src: "/js/playcards.js"}
-    %link{rel: "stylesheet", href: "css/style.css", type: "text/css"}
-    %link{rel: "stylesheet", href: "css/jquery-ui.min.css", type: "text/css"}
-    %link{rel: "stylesheet", href: "css/jquery-ui.theme.min.css", type: "text/css"}
-    %link{rel: "stylesheet", href: "css/index.css", type: "text/css"}
-    %title トランプの山札からカードを引くやつ
-    %body#INDEX
-      #PAGETOP
-        #HEADER
-          %h1 トランプの山札からカードを引くやつ
-          - # トップ画像配布元
-          - # https://pixabay.com/ja/%E3%83%88%E3%83%A9%E3%83%B3%E3%83%97-%E7%81%AB%E3%81%8B%E3%81%8D%E6%A3%92-%E3%83%96%E3%83%AA%E3%83%83%E3%82%B8-%E3%82%B2%E3%83%BC%E3%83%A0-%E3%82%A8%E3%83%BC%E3%82%B9-%E3%82%A6%E3%82%A8%E3%82%B9%E3%83%88-%E3%82%AB%E3%82%B8%E3%83%8E-1201258/
-          %ul#PAN
-            %li index
-        %hr
-        #MENU
-        #KIZI
-          %h2 説明
-          .text
-            %p
-              サーバ上の山札からカードを引くやつです。
+#PAGETOP
+  #HEADER
+    %h1 トランプの山札からカードを引くやつ
+    - # トップ画像配布元
+    - # https://pixabay.com/ja/%E3%83%88%E3%83%A9%E3%83%B3%E3%83%97-%E7%81%AB%E3%81%8B%E3%81%8D%E6%A3%92-%E3%83%96%E3%83%AA%E3%83%83%E3%82%B8-%E3%82%B2%E3%83%BC%E3%83%A0-%E3%82%A8%E3%83%BC%E3%82%B9-%E3%82%A6%E3%82%A8%E3%82%B9%E3%83%88-%E3%82%AB%E3%82%B8%E3%83%8E-1201258/
+    %ul#PAN
+      %li index
+  %hr
+  #MENU
+    %h2 menu
+    %ul
+      %li#MENU01.menu-on
+        %a{:href => "/"} index
+      %li#MENU02
+        %a{:href => "/allcomments"} log
+  #KIZI
+    %h2 説明
+    .text
+      %p
+        サーバ上の山札からカードを引くやつです。
 
-          %h2 カード操作
-          .text
-            %h3 残り山札
-            %p.cardleftcount
-              &nbsp;
-            %h3 操作ボタン
-            これから引くカードへのコメント
-            %br
-            %input{:type => "text",:name => "textcomment", :id => "textcomment", :maxlength => 140, :size => 80, :placeholder => "例：今晩の夕飯、赤が出たらラーメン。黒が出たらカレー。"}
-            %br
-            コメント削除用パスワード
-            %br
-            %input{:type => "password", :name => "deletepassword", :id => "deletepassword", :maxlength => 30, :size => 30}
-            %br
-            %input{:type => "button",:name => "drawcardbutton", :id => "drawcardbutton", :class => "jquery-ui-button", :value => "カードを一枚引く+コメント送信"}
-            %input{:type => "button",:name => "shufflebutton", :id => "shufflebutton", :class => "jquery-ui-button", :value => "デッキをシャッフルする"}
+    %h2 カード操作
+    .text
+      %h3 残り山札
+      %p.cardleftcount
+        &nbsp;
+      %h3 操作ボタン
+      これから引くカードへのコメント
+      %br
+      %input{:type => "text",:name => "textcomment", :id => "textcomment", :maxlength => 140, :size => 80, :placeholder => "例：今晩の夕飯、赤が出たらラーメン。黒が出たらカレー。"}
+      %br
+      コメント削除用パスワード
+      %br
+      %input{:type => "password", :name => "deletepassword", :id => "deletepassword", :maxlength => 30, :size => 30}
+      %br
+      %input{:type => "button",:name => "drawcardbutton", :id => "drawcardbutton", :class => "jquery-ui-button", :value => "カードを一枚引く+コメント送信"}
+      %input{:type => "button",:name => "shufflebutton", :id => "shufflebutton", :class => "jquery-ui-button", :value => "デッキをシャッフルする"}
 
-            .flashmessage.ui-state-highlight
-              %h3 メッセージ
-              %p
-                &nbsp;
-
-            .cardresult
-              %h3 結果
-              - #トランプの柄画像配布元
-              - #http://sozai.7gates.net/docs/trump/
-              %p
-                あなたが引いたカードはこれ！
-              %p.carddrawntext
-                &nbsp;
-              %p.carddrawnimg
-                &nbsp;
-            %h2 今までに引いたカード
-            #recentComments
-              = haml :_recentcomments
-        #FOOTER
+      .flashmessage.ui-state-highlight
+        %h3 メッセージ
+        %p
           &nbsp;
-        = haml :_jquery_ui_dialogs
+
+      .cardresult
+        %h3 結果
+        - #トランプの柄画像配布元
+        - #http://sozai.7gates.net/docs/trump/
+        %p
+          あなたが引いたカードはこれ！
+        %p.carddrawntext
+          &nbsp;
+        %p.carddrawnimg
+          &nbsp;
+      %h2 今までに引いたカード
+      #recentComments
+        = haml :_recentcomments
+  #FOOTER
+    &nbsp;
+  = haml :_jquery_ui_dialogs
