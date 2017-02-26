@@ -86,6 +86,11 @@ class PlayCardsServer < Sinatra::Base
 
   #トップページ
   get '/' do
+    # データベースにテーブルが存在しなければ追加
+  	unless PlayCardDb.tableexists? then
+  		PlayCardDb.createtable
+  	end
+		
     @recentarr = getrecentcards()
 		@importjsarr = ["/js/index.js"]
     haml :index
@@ -139,6 +144,11 @@ class PlayCardsServer < Sinatra::Base
 
 	# コメント一覧ページを表示する
 	get '/allcomments' do
+    # データベースにテーブルが存在しなければ追加
+  	unless PlayCardDb.tableexists? then
+  		PlayCardDb.createtable
+  	end
+
 		#コメント、カードの全記録を取得する
     @recentarr = getrecentcards(0)
 		@importjsarr = ["/js/allcomments.js"]
@@ -147,6 +157,11 @@ class PlayCardsServer < Sinatra::Base
 
   #既存のカードにコメントを投稿する
   post '/addcomment' do
+    # データベースにテーブルが存在しなければ追加
+  	unless PlayCardDb.tableexists? then
+  		PlayCardDb.createtable
+  	end
+
     commentstatus = ""
     # コメントが付属していた場合、コメントを登録する
     if params[:textcomment] != nil && (!params[:textcomment].empty?) then
@@ -163,12 +178,22 @@ class PlayCardsServer < Sinatra::Base
 
   #今までに引いたカードとコメントの一覧を返す
   get '/recentcards' do
+    # データベースにテーブルが存在しなければ追加
+  	unless PlayCardDb.tableexists? then
+  		PlayCardDb.createtable
+  	end
+
     @recentarr = getrecentcards()
     haml :_recentcomments, :layout => nil
   end
 
   #デッキをシャッフルして結果を返す
   get '/shuffle' do
+    # データベースにテーブルが存在しなければ追加
+  	unless PlayCardDb.tableexists? then
+  		PlayCardDb.createtable
+  	end
+
     # データベースにテーブルが存在しなければ追加
   	unless PlayCardDb.tableexists? then
   		PlayCardDb.createtable
@@ -215,6 +240,11 @@ class PlayCardsServer < Sinatra::Base
 
   #コメントを削除する
   post '/deletecomment' do
+    # データベースにテーブルが存在しなければ追加
+  	unless PlayCardDb.tableexists? then
+  		PlayCardDb.createtable
+  	end
+
     status = ""
 		if valid_deletepath?(params[:commentid], params[:deletepassword]) then
 			PlayCardDb.setcommentvalid(0, params[:commentid])
