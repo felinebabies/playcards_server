@@ -6,13 +6,18 @@ $(document).ready(function(){
 
   $("#drawcardbutton").click(function(){
     // ajaxでカードを一枚引く
+    var carddesignstr = "standard";
+    if($('input[name=carddesign]:checked').val() === 'monacoin'){
+      carddesignstr = "monachar";
+    }
     var jsonsuccess = false;
     var result = $.ajax({
       type: 'POST',
       url: '/drawcard',
       data: {
         textcomment: $("#textcomment").val(),
-        deletepassword: $("#deletepassword").val()
+        deletepassword: $("#deletepassword").val(),
+        carddesign: carddesignstr
       },
       async: false,
       success: function(data) {

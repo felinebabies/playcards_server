@@ -35,6 +35,14 @@
       %br
       %input{:type => "button",:name => "drawcardbutton", :id => "drawcardbutton", :class => "jquery-ui-button", :value => "カードを一枚引く+コメント送信"}
       %input{:type => "button",:name => "shufflebutton", :id => "shufflebutton", :class => "jquery-ui-button", :value => "デッキをシャッフルする"}
+      %br
+      %br
+      カードデザイン
+      %br
+      %input{:type => "radio", :name => "carddesign", :value => "monacoin", :checked => true}
+      モナコインキャラ
+      %input{:type => "radio", :name => "carddesign", :value => "standard"}
+      スタンダード
 
       .flashmessage.ui-state-highlight
         %h3 メッセージ

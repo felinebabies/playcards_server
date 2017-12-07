@@ -68,6 +68,7 @@ class PlayCardsServer < Sinatra::Base
       end
       commentsobj = PlayCardDb.getcardcommentbycardsobj(recentcards)
     end
+    commentsobj = [] if commentsobj == nil
 
     cards = Playcards.new()
 
@@ -126,9 +127,20 @@ class PlayCardsServer < Sinatra::Base
       # 引いたカードをDBに登録する
       PlayCardDb.savecardrecord(deckobj[:id], card)
 
+      # カードの図柄指定があれば設定する
+      designtype = "standard"
+      if params[:carddesign] != nil then
+        case params[:carddesign]
+        when "monachar" then
+          designtype = "mona_char_card"
+        else
+          designtype = "standard"
+        end
+      end
+
       # カードの情報を取得する
       cardinfo = cards.getcardinfo(card)
-      cardinfo[:imgurl] = getcardimagepath(cardinfo[:type], cardinfo[:num])
+      cardinfo[:imgurl] = getcardimagepath(cardinfo[:type], cardinfo[:num], designtype)
 
       # コメントが付属していた場合、コメントを登録する
       if params[:textcomment] != nil && (!params[:textcomment].empty?) then
