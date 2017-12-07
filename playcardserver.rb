@@ -28,7 +28,7 @@ class PlayCardsServer < Sinatra::Base
 
   helpers do
     #カード情報から、カード画像へのパスを返す
-    def getcardimagepath(type, number)
+    def getcardimagepath(type, number, design = "standard")
       imgname = ""
       case type
       when "heart" then
@@ -52,7 +52,7 @@ class PlayCardsServer < Sinatra::Base
       end
       imgname += ".png"
 
-      return "/image/" + imgname
+      return "/image/#{design}/" + imgname
     end
   end
 
